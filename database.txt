@@ -1,0 +1,95 @@
+CREATE DATABASE petshop;
+
+USE petshop;
+
+CREATE TABLE IF NOT EXISTS entidades(
+id INT AUTO_INCREMENT PRIMARY KEY,
+registro VARCHAR(14),
+nome VARCHAR(100) NOT NULL,
+data_nascimento DATE,
+genero VARCHAR(10),
+endereco VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS clientes(
+id INT AUTO_INCREMENT PRIMARY KEY,
+telefone VARCHAR(15),
+registro_entidade INT,
+FOREIGN KEY (registro_entidade)
+        REFERENCES entidades(id)
+        ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS funcionarios(
+id INT AUTO_INCREMENT PRIMARY KEY,
+telefone VARCHAR(15),
+data_admissao DATE,
+data_demissao DATE,
+usuario VARCHAR(20) NOT NULL,
+senha VARCHAR(32) NOT NULL,
+funcao_funcionario VARCHAR (32),
+registro_entidade INT,
+FOREIGN KEY (registro_entidade)
+        REFERENCES entidades(id)
+        ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS animais(
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(25),
+data_nascimento DATE,
+especie VARCHAR(25),
+raca VARCHAR(25),
+sexo VARCHAR(10),
+pelagem VARCHAR(15),
+origem VARCHAR(50),
+id_cliente INT,
+FOREIGN KEY (id_cliente)
+        REFERENCES clientes(id)
+        ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS fornecedores(
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(25),
+tipo_entidade VARCHAR(10),
+endereco VARCHAR(50),
+telefone VARCHAR(15),
+email VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS produtos(
+id INT AUTO_INCREMENT PRIMARY KEY,
+quantidade INT,
+preco DOUBLE,
+descricao VARCHAR(50),
+data_lancamento DATE,
+tipo_produto VARCHAR(10),
+imagem VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS servicos(
+id INT AUTO_INCREMENT PRIMARY KEY,
+preco DOUBLE,
+descricao VARCHAR(50),
+assistente BOOLEAN,
+veterinario BOOLEAN,
+observacao VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS procedimentos(
+id INT AUTO_INCREMENT PRIMARY KEY,
+valor_total DOUBLE,
+data_agendamento DATE,
+hora_agendamento DATETIME,
+data_entrada DATETIME,
+data_saida DATETIME,
+forma_pagamento VARCHAR(15),
+estado_procedimento VARCHAR(15),
+id_funcionario INT,
+id_cliente INT,
+id_animal INT,
+FOREIGN KEY (id_funcionario) REFERENCES funcionarios(id) ON UPDATE RESTRICT ON DELETE CASCADE,
+FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON UPDATE RESTRICT ON DELETE CASCADE,
+FOREIGN KEY (id_animal) REFERENCES animais(id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
