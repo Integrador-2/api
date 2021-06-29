@@ -8,7 +8,13 @@ class Fornecedores{
   public function cadastrar(){
     $obDatabase = new Database('fornecedores');
     $dados = isset($_POST['dados']) ? $_POST['dados'] : null;
-    $dados = json_decode($dados, true);
+    if ($dados) {
+      $dados = json_decode($dados, true);
+    }
+    if (!$dados) {
+      $dados = json_decode(file_get_contents('php://input'), true);
+      $dados = $dados['dados'];
+    }
     
     return $obDatabase->insert($dados);
   }
