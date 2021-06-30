@@ -70,4 +70,16 @@ class Animais{
                                   ->fetchObject(self::class);
   }
 
+  public static function getByClienteId() {
+    $parametro = isset($_POST['dados']) ? $_POST['dados'] : null;
+    $parametro = json_decode($parametro, true);
+    if (!$parametro) {
+      $parametro = json_decode(file_get_contents('php://input'), true);
+      $parametro = $parametro['dados'];
+    }
+    $query = "SELECT * FROM animais WHERE id_cliente= " . $parametro;
+    return (new Database('animais'))->selectLivre($query)
+                                  ->fetchAll(PDO::FETCH_CLASS,self::class);
+  }
+
 }
