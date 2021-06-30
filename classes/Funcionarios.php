@@ -16,6 +16,8 @@ class Funcionarios{
       $dados = json_decode(file_get_contents('php://input'), true);
       $dados = $dados['dados'];
     }
+
+    $dados['senha'] = md5($dados['senha']);
     
     return $obDatabase->insert($dados);
   }
@@ -77,4 +79,24 @@ class Funcionarios{
                                   ->fetchObject(self::class);
   }
 
+  public static function validaLogin() {
+    $dados = isset($_POST['dados']) ? $_POST['dados'] : null;
+    
+    if ($dados) {
+      $dados = json_decode($dados, true);
+    }
+    if (!$dados) {
+      $dados = json_decode(file_get_contents('php://input'), true);
+      $dados = $dados['dados'];
+    }
+
+    $func = (new Database('funcionarios'))->select('usuario= "' . $dados['usuario'] . '"')
+                                          ->fetchObject(self::class);
+    $func = json_decode(json_encode($func), true);
+
+    if(md5($dados['senha']) === $func['senha'])
+      return array("login" => true, "usuario" => $dados['usuario']);
+
+    return array("login" => false);
+  }
 }
