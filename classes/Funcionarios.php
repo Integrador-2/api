@@ -51,6 +51,12 @@ class Funcionarios{
                                   ->fetchAll(PDO::FETCH_CLASS,self::class);
   }
 
+  public static function getAllComEntidades(){
+    $query = "SELECT * FROM funcionarios as f, entidades as e WHERE f.registro_entidade = e.id";
+    return (new Database('funcionarios'))->selectLivre($query)
+                                  ->fetchAll(PDO::FETCH_CLASS,self::class);
+  }
+
   public static function get(){
     $parametro = isset($_POST['dados']) ? $_POST['dados'] : null;
     $parametro = json_decode($parametro, true);

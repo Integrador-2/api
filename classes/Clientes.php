@@ -50,6 +50,12 @@ class Clientes{
                                   ->fetchAll(PDO::FETCH_CLASS,self::class);
   }
 
+  public static function getAllComEntidades(){
+    $query = "SELECT * FROM clientes as c, entidades as e WHERE c.registro_entidade = e.id";
+    return (new Database('clientes'))->selectLivre($query)
+                                  ->fetchAll(PDO::FETCH_CLASS,self::class);
+  }
+
   public static function get(){
     $parametro = isset($_POST['dados']) ? $_POST['dados'] : null;
     $parametro = json_decode($parametro, true);

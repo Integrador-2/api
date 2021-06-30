@@ -98,6 +98,14 @@ class Database{
   }
 
   /**
+   * Método responsável por executar uma consulta previamente montada no banco
+   * @return PDOStatement
+   */
+  public function selectLivre($query){
+    return $this->execute($query);
+  }
+
+  /**
    * Método responsável por executar atualizações no banco de dados
    * @param  string $where
    * @param  array $values [ field => value ]
