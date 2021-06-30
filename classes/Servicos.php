@@ -22,16 +22,27 @@ class Servicos{
   public function atualizar(){
     $dados = isset($_POST['dados']) ? $_POST['dados'] : null;
     $dados = json_decode($dados, true);
-
+    if ($dados) {
+      $dados = json_decode($dados, true);
+    }
+    if (!$dados) {
+      $dados = json_decode(file_get_contents('php://input'), true);
+      $dados = $dados['dados'];
+    }
     return (new Database('servicos'))->update('id = '.$dados['id'], $dados);
   }
 
   public function excluir(){
     $parametro = isset($_POST['dados']) ? $_POST['dados'] : null;
-    $parametro = json_decode($parametro, true);
-    $chave = array_keys($parametro)[0];
+    if ($parametro) {
+      $parametro = json_decode($parametro, true);
+    }
+    if (!$parametro) {
+      $parametro = json_decode(file_get_contents('php://input'), true);
+      $parametro = $parametro['dados'];
+    }
 
-    return (new Database('servicos'))->delete($chave.'= '.$parametro[$chave]);
+    return (new Database('produtos'))->delete('id = '.$parametro);
   }
 
   public static function getAll($where = null, $order = null, $limit = null){
@@ -45,6 +56,17 @@ class Servicos{
     $chave = array_keys($parametro)[0];
 
     return (new Database('servicos'))->select($chave.'= '.$parametro[$chave])
+                                  ->fetchObject(self::class);
+  }
+
+  public static function getById() {
+    $parametro = isset($_POST['dados']) ? $_POST['dados'] : null;
+    $parametro = json_decode($parametro, true);
+    if (!$parametro) {
+      $parametro = json_decode(file_get_contents('php://input'), true);
+      $parametro = $parametro['dados'];
+    }    
+    return (new Database('produtos'))->select('id = '.$parametro)
                                   ->fetchObject(self::class);
   }
 
